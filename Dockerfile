@@ -21,7 +21,7 @@ WORKDIR /app
 
 COPY --chown=node:node package.json package-lock.json ./
 USER node
-RUN npm ci
+RUN npm ci --include=dev
 
 COPY --chown=node:node . .
 RUN npm run build
