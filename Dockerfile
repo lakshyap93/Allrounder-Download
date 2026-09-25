@@ -18,6 +18,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
+RUN chown node:node /app
 
 COPY --chown=node:node package.json package-lock.json ./
 USER node
