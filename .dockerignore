@@ -1,8 +1,0 @@
-.git
-.next
-node_modules
-.tmp-media
-.env*
-!.env.example
-*.tsbuildinfo
-npm-debug.log*
