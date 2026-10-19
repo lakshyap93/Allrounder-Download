@@ -96,7 +96,7 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error("[/api/analyze] Error:", err);
     const message = err instanceof Error ? err.message : "";
-    if (message.startsWith("The media engine yt-dlp is missing.")) {
+    if (message.startsWith("The media engine yt-dlp")) {
       return NextResponse.json(
         { error: message },
         { status: 503, headers: { "Access-Control-Allow-Origin": "*" } }
