@@ -4,7 +4,7 @@ ENV NODE_ENV=production \
     NEXT_TELEMETRY_DISABLED=1 \
     DENO_INSTALL=/usr/local \
     DENO_PATH=/usr/local/bin/deno \
-    YTDLP_PATH=/usr/local/bin/yt-dlp \
+    YTDLP_PATH=yt-dlp \
     FFMPEG_PATH=/usr/bin/ffmpeg \
     YTDLP_FORCE_IPV4=true \
     TEMP_DIR=/tmp/allrounder-media
@@ -12,6 +12,9 @@ ENV NODE_ENV=production \
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates curl ffmpeg python3 python3-pip unzip \
     && python3 -m pip install --break-system-packages --no-cache-dir yt-dlp \
+    && command -v yt-dlp \
+    && yt-dlp --version \
+    && ffmpeg -version >/dev/null \
     && curl -fsSL https://deno.land/install.sh | sh \
     && mkdir -p /tmp/allrounder-media \
     && chown node:node /tmp/allrounder-media \

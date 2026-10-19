@@ -49,8 +49,14 @@ function findWinGetExecutable(packagePrefix: string, executable: string): string
 const winGetLinks = process.env.LOCALAPPDATA
   ? path.join(process.env.LOCALAPPDATA, 'Microsoft', 'WinGet', 'Links')
   : '';
-const YTDLP_PATH = process.env.YTDLP_PATH ||
-  (winGetLinks && fsSync.existsSync(path.join(winGetLinks, 'yt-dlp.exe'))
+const configuredYtdlpPath = process.env.YTDLP_PATH?.trim();
+const isWindowsPath = (value: string) => /^[a-zA-Z]:[\\/]/.test(value);
+const configuredYtdlpIsAvailable = configuredYtdlpPath && !isWindowsPath(configuredYtdlpPath)
+  ? (!path.isAbsolute(configuredYtdlpPath) || fsSync.existsSync(configuredYtdlpPath))
+  : false;
+const YTDLP_PATH = configuredYtdlpIsAvailable
+  ? configuredYtdlpPath!
+  : (winGetLinks && fsSync.existsSync(path.join(winGetLinks, 'yt-dlp.exe'))
     ? path.join(winGetLinks, 'yt-dlp.exe')
     : 'yt-dlp');
 const FFMPEG_PATH = process.env.FFMPEG_PATH ||
@@ -65,7 +71,7 @@ const DENO_LOCATION = process.env.DENO_PATH ||
 const YTDLP_FORCE_IPV4 = process.env.YTDLP_FORCE_IPV4 !== 'false';
 const YTDLP_TIMEOUT_MS = 60_000; // metadata/extractor timeout
 const YTDLP_DOWNLOAD_IDLE_TIMEOUT_MS = 10 * 60_000; // allow slow sources and long fragment retries
-const YTDLP_INSTALL_HELP = 'The media engine yt-dlp is missing. Install it in PowerShell with `winget install yt-dlp`, then restart the development server.';
+const YTDLP_INSTALL_HELP = 'The media engine yt-dlp is not available in this server environment. Check that the deployment image installs yt-dlp and that it is available on PATH, then rebuild and redeploy.';
 const TEMP_ROOT = process.env.TEMP_DIR || os.tmpdir();
 const ANALYSIS_CACHE_TTL_MS = 60_000;
 const ANALYSIS_CACHE_MAX_ENTRIES = 100;
